@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import CivicIssue, Comment
 
-# Register your models here.
+admin.site.register(CivicIssue)
+admin.site.register(Comment)
