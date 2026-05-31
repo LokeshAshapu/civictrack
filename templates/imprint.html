@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicTrack - Imprint</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/8d0d017efe.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .legal-content {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .legal-content h2 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #0d3b73;
+            font-weight: 600;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .legal-content h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #0d3b73;
+            font-size: 1.1rem;
+        }
+
+        .legal-content p {
+            margin-bottom: 1rem;
+        }
+
+        .contact-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d3b73;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .contact-box p {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="bg-light" style="padding-top: 85px;">
+
+    {% include 'navbar.html' %}
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <h1 class="mb-4 text-dark fw-bold">Imprint</h1>
+
+                <div class="legal-content bg-white p-4 rounded-3 shadow-sm">
+
+                    <h2>Disclaimer (Haftungsausschluss)</h2>
+                    <p>As the provider of the content on this website in accordance with section 7, para. 1 of the TMG (Telemediengesetz – Tele Media Act by German law), we are liable for our own content on these web pages in accordance with general laws. However, according to sections 8 to 10 of the TMG, we as service providers are not under obligation to monitor external information which we transmit or store on our website. Once we have become aware of a specific infringement of the law, we will immediately remove the infringing content. Any liability concerning this matter shall only be effective from the point in time at which the infringement has been brought to our notice.</p>
+
+                    <h2>Responsible Party (Verantwortliche/r)</h2>
+                    
+                    <div class="contact-box">
+                        <p><strong>CivicTrack Platform</strong></p>
+                        <p>Representative: Development Team</p>
+                        <p>Email: info@civictrack.com</p>
+                        <p>Website: www.civictrack.com</p>
+                    </div>
+
+                    <h2>Liability for Links</h2>
+                    <p>Our website may contain links to external third-party websites. Since we have no influence on the content of these external websites, we assume no liability for these external contents. The respective provider or operator of the linked pages is always responsible for the contents of the linked pages. The linked pages were checked for possible legal violations at the time of linking. Illegal contents were not identified at the time of linking. A permanent monitoring of the contents of the linked pages is not reasonable without concrete evidence of a violation of law. Upon notification of violations, we will immediately remove the relevant links.</p>
+
+                    <h2>Copyright (Urheberrecht)</h2>
+                    <p>The contents and works on this website created by CivicTrack are governed by German copyright law. The reproduction, modification, distribution, and any form of utilization outside the limits of copyright law require the written consent of the author or originator. Downloads and copies of this page are only permitted for private, non-commercial use. If the contents on this website were not created by us, the copyrights of third parties are respected. In particular, third-party content is identified as such. Should you nevertheless become aware of a copyright infringement, please inform us accordingly. Upon notification of violations, we will immediately remove the infringing content.</p>
+
+                    <h2>Data Protection (Datenschutz)</h2>
+                    <p>Please refer to our <a href="{% url 'privacy_policy' %}" class="text-decoration-none" style="color: #0d3b73;">Privacy Policy</a> for information about the collection, processing, and use of personal data.</p>
+
+                    <h2>Terms of Service</h2>
+                    <p>Please refer to our <a href="{% url 'terms_of_service' %}" class="text-decoration-none" style="color: #0d3b73;">Terms of Service</a> for the terms and conditions governing the use of this website.</p>
+
+                    <h2>Dispute Resolution</h2>
+                    <p>The laws of the relevant jurisdiction apply to the contents of this website. In the event of disputes, the parties agree to submit to the jurisdiction of the competent courts of the relevant jurisdiction.</p>
+
+                    <h2>Limitation of Liability</h2>
+                    <p>We shall not be liable for any damages, losses, or claims resulting from the use of this website, including but not limited to indirect, incidental, special, or consequential damages, even if we have been advised of the possibility of such damages.</p>
+
+                    <h2>Right of Withdrawal</h2>
+                    <p>For any services offered through our website, customers have a right of withdrawal according to applicable laws. For more information about the withdrawal process, please contact us at info@civictrack.com</p>
+
+                    <h2>Last Modified</h2>
+                    <p>This imprint was last updated on <span id="lastUpdated"></span></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 CivicTrack. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+</body>
+
+</html>

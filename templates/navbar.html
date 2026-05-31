@@ -1,0 +1,120 @@
+<!-- Fully Upgraded Unified Navbar Layer -->
+<nav class="navbar navbar-expand-lg fixed-top shadow-sm border-bottom border-white border-opacity-25 glass-nav"
+    id="mainNavbar">
+    <div class="container">
+
+        <a class="navbar-brand d-flex align-items-center text-dark text-decoration-none" href="{% url 'home' %}">
+            <img src="/static/images/logo.png" alt="CivicTrack Logo" class="rounded-circle me-2"
+                style="width: 48px; height: 48px; object-fit: contain;">
+            <span class="fw-bold fs-5 text-dark">CivicTrack</span>
+        </a>
+
+        <!-- Mobile Hamburger Toggle Button Trigger -->
+        <button class="navbar-toggler border-0 shadow-none p-2" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapseBlock">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Collapsible Navigation Wrap Content -->
+        <div class="collapse navbar-collapse" id="navbarCollapseBlock">
+            <ul
+                class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-1 gap-lg-2 pt-3 pt-lg-0 fw-medium text-center text-lg-start">
+
+                <!-- Permanent Universal Menu Items -->
+                <li class="nav-item">
+                    <a class="nav-link px-3" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3" href="{% url 'home' %}#About">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3" href="{% url 'map' %}">Explore Map</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3" href="{% url 'civic_details' %}">Report issue</a>
+                </li>
+
+                {% if user.is_authenticated %}
+                <!-- Post-Login Only Link Item -->
+                <li class="nav-item">
+                    <a class="nav-link px-3" href="{% url 'check_progress' %}">Check Progress</a>
+                </li>
+
+                <!-- Exact-Match Post-Login Action: Dark Blue Capsule Logout Button Container -->
+                <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                    <a href="{% url 'logout' %}"
+                        class="btn btn-sm text-white rounded-pill px-4 py-2 fw-semibold d-block d-lg-inline-block shadow-sm w-100"
+                        style="background-color: #0d3b73; font-size: 0.95rem; border: none; min-width: 110px;">
+                        Logout
+                    </a>
+                </li>
+                {% else %}
+                <!-- Default Guest Actions: Sign Up Button Container -->
+                <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                    <a href="{% url 'register' %}"
+                        class="btn btn-sm btn-outline-primary rounded-pill px-4 py-2 fw-medium d-block d-lg-inline-block shadow-sm w-100">Sign
+                        Up</a>
+                </li>
+
+                <!-- Default Guest Actions: Login Button Container -->
+                <li class="nav-item ms-lg-1 mt-2 mt-lg-0">
+                    <a href="{% url 'login' %}"
+                        class="btn btn-sm btn-outline-success rounded-pill px-4 py-2 fw-medium d-block d-lg-inline-block shadow-sm w-100">Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Navbar Styles -->
+<style>
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 85px;
+    }
+
+    * {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Glassmorphism Configuration */
+    .glass-nav {
+        background: rgba(255, 255, 255, 0.75) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+    }
+
+    /* Navigation Links Styling */
+    .navbar-nav .nav-link {
+        color: #495057;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.25s ease-in-out;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: #0d3b73;
+    }
+
+    /* Dynamic Scrollspy Active Underline Highlight (Desktop Only) */
+    @media (min-width: 992px) {
+        .navbar-nav .nav-link.active {
+            color: #0d3b73 !important;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 8px;
+            text-decoration-thickness: 2px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .navbar-nav .nav-link.active {
+            color: #0d3b73 !important;
+            background-color: rgba(13, 59, 115, 0.08);
+            border-radius: 50px;
+        }
+    }
+</style>
+
+{% include 'chatbot_widget.html' %}

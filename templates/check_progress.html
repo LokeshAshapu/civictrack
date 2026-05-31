@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicTrack - Check Progress</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/8d0d017efe.js" crossorigin="anonymous"></script>
+    <style>
+        .issue-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.08);
+            background-color: white;
+        }
+        
+        .issue-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .status-badge {
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .status-open {
+            background-color: #ffeeba;
+            color: #856404;
+        }
+
+        .status-resolved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .filter-section h6 {
+            color: #0d3b73;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-row input,
+        .filter-row select {
+            height: 42px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+
+        .filter-row input:focus,
+        .filter-row select:focus {
+            border-color: #0d3b73;
+            box-shadow: 0 0 0 0.2rem rgba(13, 59, 115, 0.15);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-buttons button {
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .results-info {
+            background: #E9F3FF;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #0d3b73;
+            font-weight: 500;
+        }
+
+        .status-in-progress {
+            background-color: #fff3cd;
+            color: #997404;
+        }
+    </style>
+</head>
+
+<body class="bg-light" style="padding-top: 85px;">
+
+    {% include 'navbar.html' %}
+
+    <!-- Main Content Grid Structure -->
+    <div class="container py-5" style="min-height: 70vh;">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold text-dark">Community Issues Progress</h1>
+            <p class="text-secondary">Track the real-time status of civic issues reported in your area.</p>
+        </div>
+
+        <!-- Advanced Filter Section -->
+        <div class="filter-section">
+            <h6><i class="fa-solid fa-sliders me-2"></i>Search & Filter Issues</h6>
+            <form method="GET" id="filterForm">
+                <div class="filter-row" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+                    <!-- Text Search input -->
+                    <div class="d-flex flex-column">
+                        <label class="form-label small fw-semibold text-secondary mb-1">Keywords</label>
+                        <input type="text" name="search" placeholder="Search keywords..." 
+                               value="{{ search }}" class="form-control">
+                    </div>
+                    
+                    <!-- Location Filter -->
+                    <div class="d-flex flex-column">
+                        <label class="form-label small fw-semibold text-secondary mb-1">Location</label>
+                        <input type="text" name="location" placeholder="Filter by location..." 
+                               value="{{ location }}" class="form-control">
+                    </div>
+
+                    <!-- Date Filter -->
+                    <div class="d-flex flex-column">
+                        <label class="form-label small fw-semibold text-secondary mb-1">Date Reported</label>
+                        <input type="date" name="date" value="{{ date }}" class="form-control">
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="d-flex flex-column">
+                        <label class="form-label small fw-semibold text-secondary mb-1">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="">All Status</option>
+                            <option value="Open" {% if status == 'Open' %}selected{% endif %}>🔴 Open</option>
+                            <option value="In Progress" {% if status == 'In Progress' %}selected{% endif %}>🟠 In Progress</option>
+                            <option value="Resolved" {% if status == 'Resolved' %}selected{% endif %}>🟢 Resolved</option>
+                        </select>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div class="d-flex flex-column">
+                        <label class="form-label small fw-semibold text-secondary mb-1">Department</label>
+                        <select name="department" class="form-select">
+                            <option value="">All Departments</option>
+                            {% for code, name in department_choices %}
+                            <option value="{{ code }}" {% if department == code %}selected{% endif %}>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Sorting -->
+                    <div class="d-flex flex-column">
+                        <label class="form-label small fw-semibold text-secondary mb-1">Sort By</label>
+                        <select name="sort" class="form-select">
+                            <option value="">Sort By</option>
+                            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest First</option>
+                            <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest First</option>
+                            <option value="title" {% if sort == 'title' %}selected{% endif %}>Title (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-buttons mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-magnifying-glass me-2"></i>Apply Filters
+                    </button>
+                    <a href="{% url 'check_progress' %}" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-rotate-right me-2"></i>Clear All
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Info -->
+        {% if search or status or location or date or department %}
+        <div class="results-info">
+            <i class="fa-solid fa-circle-info me-2"></i>
+            Showing {{ filtered_count }} of {{ total_count }} issues
+            {% if search %}<span class="ms-2">matching keywords "{{ search }}"</span>{% endif %}
+            {% if location %}<span class="ms-2">in location "{{ location }}"</span>{% endif %}
+            {% if status %}<span class="ms-2">with status "{{ status }}"</span>{% endif %}
+            {% if date %}<span class="ms-2">reported on "{{ date }}"</span>{% endif %}
+            {% if department %}
+                <span class="ms-2">assigned to department 
+                    "
+                    {% for code, name in department_choices %}
+                        {% if code == department %}{{ name }}{% endif %}
+                    {% endfor %}
+                    "
+                </span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for issue in issues %}
+            <div class="col">
+                <div class="issue-card h-100 d-flex flex-column">
+                    {% if issue.uploaded_image %}
+                    <img src="{{ issue.uploaded_image.url }}" class="card-img-top" alt="Issue Image" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fa-solid fa-image text-secondary fs-1 opacity-50"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="p-4 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <a href="{% url 'issue_detail' issue.id %}" class="text-decoration-none text-dark hover-primary text-truncate" style="max-width: 65%;">
+                                <h5 class="fw-bold mb-0 text-truncate" title="{{ issue.name }}">{{ issue.name }}</h5>
+                            </a>
+                            
+                            <div class="d-flex flex-column align-items-end gap-1">
+                                {% if issue.status == 'Resolved' %}
+                                <span class="status-badge status-resolved">Resolved</span>
+                                {% elif issue.status == 'In Progress' %}
+                                <span class="status-badge status-in-progress">In Progress</span>
+                                {% else %}
+                                <span class="status-badge status-open">Open</span>
+                                {% endif %}
+                                <span class="badge bg-secondary text-wrap" style="font-size: 0.72rem; max-width: 110px;">{{ issue.get_assigned_department_display }}</span>
+                            </div>
+                        </div>
+                        
+                        <p class="text-secondary small fw-medium mb-3">
+                            <i class="fa-solid fa-location-dot me-1 text-danger"></i> {{ issue.origin_location }}
+                        </p>
+                        
+                        <p class="text-muted small flex-grow-1 mb-4" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ issue.issue_details }}
+                        </p>
+                        
+                        <div class="mt-auto d-flex justify-content-between align-items-center border-top pt-3 mb-2">
+                            <small class="text-muted"><i class="fa-regular fa-clock me-1"></i> {{ issue.created_at|date:"M d, Y" }}</small>
+                            <a href="{% url 'issue_detail' issue.id %}" class="text-primary fw-semibold small text-decoration-none">ID: #{{ issue.id }}</a>
+                        </div>
+
+                        {% if issue.latitude and issue.longitude %}
+                        <div class="mb-2">
+                            <small class="text-muted"><i class="fa-solid fa-map-pin me-1 text-info"></i> {{ issue.latitude }}, {{ issue.longitude }}</small>
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-2 d-flex gap-2 align-items-center flex-wrap">
+                            <a href="{% url 'issue_detail' issue.id %}" class="btn btn-sm btn-primary rounded-pill px-3">View Details</a>
+                            {% if user.is_authenticated %}
+                                {% if issue.user == user or user.is_staff or user.is_superuser %}
+                                <a href="{% url 'update' issue.id %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Edit</a>
+                                    {% if user.is_staff or user.is_superuser %}
+                                    <a href="{% url 'delete_issue' issue.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Delete this issue?')">Delete</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        {% if user.is_authenticated and user.is_staff or user.is_superuser %}
+                        <div class="mt-3 border-top pt-3">
+                            <form method="POST" action="{% url 'change_status' issue.id %}" class="d-flex gap-1 align-items-center flex-wrap">
+                                {% csrf_token %}
+                                <label class="small text-secondary fw-semibold mb-0 me-1">Status:</label>
+                                <select name="status" class="form-select form-select-sm rounded-3" style="width: auto; font-size: 0.85rem;">
+                                    <option value="Open" {% if issue.status == 'Open' %}selected{% endif %}>Open</option>
+                                    <option value="In Progress" {% if issue.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="Resolved" {% if issue.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-success px-3 rounded-3" style="font-size: 0.85rem;">Update</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fa-regular fa-folder-open fs-1 text-secondary opacity-50 mb-3"></i>
+                <h4 class="text-secondary">No issues reported yet</h4>
+                <p class="text-muted">Be the first to <a href="{% url 'civic_details' %}" class="text-primary text-decoration-none">raise an issue</a> in your community.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination Controls -->
+        {% if issues.has_other_pages %}
+        <nav aria-label="Page navigation" class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if issues.has_previous %}
+                <li class="page-item">
+                    <a class="page-link shadow-none border-secondary-subtle" href="?page={{ issues.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; Previous</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link border-secondary-subtle">&laquo; Previous</span>
+                </li>
+                {% endif %}
+
+                {% for num in issues.paginator.page_range %}
+                    {% if issues.number == num %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link border-primary bg-primary text-white">{{ num }}</span>
+                    </li>
+                    {% elif num > issues.number|add:'-3' and num < issues.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link shadow-none border-secondary-subtle" href="?page={{ num }}{% if query_string %}&{{ query_string }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if issues.has_next %}
+                <li class="page-item">
+                    <a class="page-link shadow-none border-secondary-subtle" href="?page={{ issues.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">Next &raquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link border-secondary-subtle">Next &raquo;</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+
+    <!-- Production Compliance Lower Border Footer Bar -->
+    <footer class="w-100 text-center py-4 border-top border-light-subtle bg-white mt-auto">
+        <p class="text-muted small mb-0 fw-medium" style="font-size: 0.8rem; letter-spacing: 0.3px;">
+            &copy; CivicTrack &bull; <a href="{% url 'terms_of_service' %}" class="text-muted text-decoration-none mx-1 link-primary">TOS</a>
+            &bull; <a href="{% url 'privacy_policy' %}" class="text-muted text-decoration-none mx-1 link-primary">Privacy Policies</a> &bull; <a
+                href="{% url 'imprint' %}" class="text-muted text-decoration-none mx-1 link-primary">Imprint</a>
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

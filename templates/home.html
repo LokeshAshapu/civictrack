@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicTrack - Home page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/8d0d017efe.js" crossorigin="anonymous"></script>
+    <style>
+        .hover-card {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        }
+        .hover-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(13, 59, 115, 0.08) !important;
+        }
+        .hover-primary:hover {
+            color: #0d3b73 !important;
+        }
+        .status-badge-inline {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+        .status-Open {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        .status-In-Progress {
+            background-color: rgba(253, 126, 20, 0.1);
+            color: #fd7e14;
+        }
+        .status-Resolved {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+    </style>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#mainNavbar" class="bg-light" style="padding-top: 85px;">
+
+    {% include 'navbar.html' %}
+
+    {% if messages %}
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-12">
+                {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Main Hero Section -->
+    <div class="container" id="Home">
+        <div class="row align-items-center py-5 gy-4">
+            <!-- Left Text Content Column -->
+            <div class="col-12 col-lg-7 text-center text-lg-start">
+                <h1 class="display-5 fw-bold text-dark mb-3 lh-sm">Transform Civic Reporting Into Real-Time Action</h1>
+                <p class="fs-5 text-secondary mb-4 col-xl-10 px-0">Report local issues, discover nearby complaints, and
+                    track resolutions instantly through CivicTrack.</p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
+                    <a href="{% url 'civic_details' %}" class="btn btn-primary bg-gradient border-0 rounded-5 px-4 py-2.5 fw-medium shadow-sm" type="button">Report An Issue</a>
+                    <a href="{% url 'map' %}" class="btn btn-outline-dark border-2 rounded-5 px-4 py-2.5 fw-medium">Explore Map</a>
+                </div>
+            </div>
+            <!-- Right Hero Image Column -->
+            <div class="col-12 col-lg-5 text-center">
+                <img src="/static/images/tracking.png" alt="Tracking illustration" class="img-fluid"
+                    style="max-height: 400px; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Counter Metrics Strip -->
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8 bg-white border border-light-subtle shadow-sm rounded-4 px-5 py-3">
+                <div
+                    class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 text-center">
+
+                    <!-- Item 1 with Inline SVG Icon -->
+                    <p class="mb-0 text-nowrap fw-medium text-dark d-flex align-items-center justify-content-center">
+                        <svg class="text-success me-2" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                        </svg>
+                        200+ issues reported
+                    </p>
+
+                    <div class="vr d-none d-md-block opacity-25" style="height: 20px;"></div>
+
+                    <!-- Item 2 with Inline SVG Icon -->
+                    <p class="mb-0 text-nowrap fw-medium text-dark d-flex align-items-center justify-content-center">
+                        <svg class="text-success me-2" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                        </svg>
+                        150+ issues resolved
+                    </p>
+
+                    <div class="vr d-none d-md-block opacity-25" style="height: 20px;"></div>
+
+                    <!-- Item 3 with Inline SVG Icon -->
+                    <p class="mb-0 text-nowrap fw-medium text-dark d-flex align-items-center justify-content-center">
+                        <svg class="text-success me-2" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                        </svg>
+                        25+ Active communities
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nearby Issues Grid Block -->
+    {% if user.is_authenticated %}
+    <div class="container py-5" id="NearbyIssues">
+        <h2 class="fw-bold text-dark text-uppercase tracking-wide mb-5 mt-3" style="letter-spacing: 1px;">Nearby Issues
+            Around Us</h2>
+        <div class="row justify-content-start">
+            {% for issue in civic_details|slice:":6" %}
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="p-4 rounded-4 shadow-sm border border-light-subtle bg-white text-dark h-100 hover-card d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-3 gap-2">
+                            <h3 class="fw-bold mb-0 fs-5 text-truncate" style="max-width: 70%;" title="{{ issue.name }}">
+                                <a href="{% url 'issue_detail' issue.id %}" class="text-decoration-none text-dark hover-primary">{{ issue.name }}</a>
+                            </h3>
+                            <span class="status-badge-inline status-{{ issue.status|cut:' ' }}">{{ issue.status }}</span>
+                        </div>
+                        <p class="mb-2 text-secondary small fw-medium">
+                            <i class="fa-solid fa-location-dot text-danger me-1"></i> {{ issue.origin_location }}
+                        </p>
+                        <p class="mb-3 text-secondary-emphasis" style="font-size: 0.92rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ issue.issue_details }}
+                        </p>
+                    </div>
+                    <div>
+                        {% if issue.latitude and issue.longitude %}
+                        <p class="mb-3 text-muted small"><i class="fa-solid fa-map-pin me-1 text-info"></i> {{ issue.latitude|floatformat:4 }}, {{ issue.longitude|floatformat:4 }}</p>
+                        {% endif %}
+                        <div class="d-flex gap-2 align-items-center flex-wrap">
+                            <a href="{% url 'issue_detail' issue.id %}" class="btn btn-sm btn-primary rounded-pill px-3">View Details</a>
+                            {% if is_admin or is_authority %}
+                            <a href="{% url 'update' issue.id %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Edit</a>
+                            <a href="{% url 'delete_issue' issue.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Delete this issue?')">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-muted">No nearby issues found at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!--About section-->
+    <div class="container-fluid p-5" style="background-color: #E9F3FF;" id="About">
+        <div class="container py-5">
+            <!-- Section Heading -->
+            <h2 class="fw-bold text-dark text-uppercase tracking-wide mt-3" style="letter-spacing: 1px;">About Us</h2>
+            <div class="row align-items-center gy-4">
+                <div class="col-12 col-lg-7 text-secondary fs-6 lh-lg"
+                    style="text-align: justify; text-justify: inter-word;">
+                    <p>CivicTrack is a citizen-driven platform designed to make cities more responsive, transparent, and
+                        efficient. It empowers individuals to actively participate in improving their surroundings by
+                        reporting everyday civic issues such as road damage, waste management problems, and public
+                        infrastructure faults.</p>
+                    <p class="mb-0">At its core, CivicTrack believes that every voice matters. By providing a simple and
+                        accessible way to highlight local concerns, the platform encourages communities to take
+                        collective responsibility for their environment. Instead of issues going unnoticed, CivicTrack
+                        ensures they are visible, trackable, and prioritized based on real needs.</p>
+                </div>
+                <div class="col-12 col-lg-5 text-center">
+                    <img src="/static/images/Earth model.png" alt="Earth model" class="img-fluid"
+                        style="max-height: 350px; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Features Section-->
+    <div class="container-fluid p-5 bg-white" id="Features">
+        <div class="container">
+            <!-- Section Title -->
+            <div class="row mb-5">
+                <div class="col-12 text-center text-md-start">
+                    <h2 class="text-uppercase fw-bold text-dark tracking-wide" style="letter-spacing: 1.5px;">
+                        Features</h2>
+                </div>
+            </div>
+            <!-- Top Row: 3 Cards -->
+            <div class="row g-4 justify-content-center mb-md-4">
+                <!-- Card 1: Location-Based -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="p-5 border-0 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center shadow-sm"
+                        style="background-color: #EBE8FF; min-height: 220px;">
+                        <div class="fs-1 mb-3 text-primary-emphasis opacity-75">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <h5 class="fw-semibold text-dark px-3 lh-sm mb-0">Location-Based<br>Issue Detection</h5>
+                    </div>
+                </div>
+                <!-- Card 2: Interactive Map -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="p-5 border-0 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center shadow-sm"
+                        style="background-color: #E6F4EA; min-height: 220px;">
+                        <div class="fs-1 mb-3 text-success opacity-75">
+                            <i class="fa-solid fa-map-marked-alt"></i>
+                        </div>
+                        <h5 class="fw-semibold text-dark px-3 lh-sm mb-0">Interactive Map View<br>Of Nearby Problems</h5>
+                    </div>
+                </div>
+                <!-- Card 3: Real-Time Updates -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="p-5 border-0 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center shadow-sm"
+                        style="background-color: #E3F2FD; min-height: 220px;">
+                        <div class="fs-1 mb-3 text-primary opacity-75">
+                            <i class="fa-regular fa-bell"></i>
+                        </div>
+                        <h5 class="fw-semibold text-dark px-3 lh-sm mb-0">Real-Time Updates<br>And Notifications</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Bottom Row: 2 Centered Cards -->
+            <div class="row gy-4 justify-content-center">
+                <!-- Card 4: Community Voting -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="p-5 border-0 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center shadow-sm"
+                        style="background-color: #FFFDE7; min-height: 220px;">
+                        <div class="fs-1 mb-3 text-warning opacity-75">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <h5 class="fw-semibold text-dark px-3 lh-sm mb-0">Community Voting For<br>Issue Prioritization</h5>
+                    </div>
+                </div>
+                <!-- Card 5: Status Tracking -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="p-5 border-0 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center shadow-sm"
+                        style="background-color: #EAEAEA; min-height: 220px;">
+                        <div class="fs-1 mb-3 text-dark opacity-50">
+                            <i class="fa-solid fa-magnifying-glass-location"></i>
+                        </div>
+                        <h5 class="fw-semibold text-dark px-3 lh-sm mb-0">Transparent Status<br>Tracking</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="container-fluid p-5" style="background-color: #E9F3FF;" id="HowITWorks">
+        <div class="container py-5 ">
+            <!-- Section Title -->
+            <h2 class="fw-bold text-dark text-uppercase tracking-wide mb-5 mt-3" style="letter-spacing: 1.5px;">How It
+                Works</h2>
+            <div class="row align-items-center gy-5 justify-content-start px-5">
+                <!-- Left Side: Interactive Timeline (Narrowed on large screens) -->
+                <div class="col-12 col-lg-6 col-xl-5 ps-4 ps-md-5">
+                    <div class="position-relative border-start border-3 border-dark ps-4 ms-2">
+                        <!-- Step 1 -->
+                        <div class="position-relative mb-4 pb-2">
+                            <div class="position-absolute bg-dark rounded-circle"
+                                style="width: 20px; height: 20px; left: -35px; top: 4px;"></div>
+                            <h4 class="fw-bold text-dark mb-1 fs-5">Report Issue</h4>
+                            <p class="text-secondary mb-0 fs-6">Add Location, Photo, Description</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="position-relative mb-4 pb-2">
+                            <div class="position-absolute bg-dark rounded-circle"
+                                style="width: 20px; height: 20px; left: -35px; top: 4px;"></div>
+                            <h4 class="fw-bold text-dark mb-1 fs-5">Nearby Issues</h4>
+                            <p class="text-secondary mb-0 fs-6">View Issues Around You On Map</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="position-relative mb-4 pb-2">
+                            <div class="position-absolute bg-dark rounded-circle"
+                                style="width: 20px; height: 20px; left: -35px; top: 4px;"></div>
+                            <h4 class="fw-bold text-dark mb-1 fs-5">Authority Review</h4>
+                            <p class="text-secondary mb-0 fs-6">Officials Verify And Assign</p>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="position-relative mb-2">
+                            <div class="position-absolute bg-dark rounded-circle"
+                                style="width: 20px; height: 20px; left: -35px; top: 4px;"></div>
+                            <h4 class="fw-bold text-dark mb-1 fs-5">Track Progress</h4>
+                            <p class="text-secondary mb-0 fs-6">Get Live Updates</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Side: Map Illustration Container -->
+                <div class="col-12 col-lg-6 col-xl-6 text-start text-lg-center">
+                    <!-- Replace with your actual image path when ready -->
+                    <img src="/static/images/GPS.png" alt="Map Illustration" class="img-fluid"
+                        style="max-height: 380px; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Why This Matters-->
+    <div class="container-fluid p-5 bg-white" id="WhyThisMatters">
+        <div class="container py-5">
+            <h2 class="fw-bold text-dark text-uppercase tracking-wide mb-5 mt-3" style="letter-spacing: 1px;">Why This
+                Matters</h2>
+            <div class="row align-items-center justify-content-center gy-4 gap-lg-5 pt-0">
+                <div class="col-12 col-lg-5 text-dark fw-medium fs-6 lh-lg">
+                    <p class="mb-4 text-secondary" style="text-align: justify; text-justify: inter-word;">
+                        CivicTrack transforms passive citizens into active contributors. By making civic issues visible
+                        and trackable, it promotes accountability, reduces delays, and ensures that community problems
+                        are addressed efficiently.
+                    </p>
+                    <p class="mb-0 text-secondary" style="text-align: justify; text-justify: inter-word;">
+                        It encourages a culture where every individual plays a role in building a better city.
+                    </p>
+                </div>
+                <div class="col-12 col-lg-5 text-center text-lg-start">
+                    <img src="/static/images/Family.png" alt="Community contributors illustration" class="img-fluid"
+                        style="max-height: 380px; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Live insights-->
+    <div class="container-fluid p-5" style="background-color: #E9F3FF;">
+        <div class="container py-5">
+            <!-- Section Title -->
+            <h2 class="fw-bold text-dark text-uppercase tracking-wide mb-5 mt-3" style="letter-spacing: 1px;">Live
+                Insights</h2>
+            <!-- 2x2 Responsive Grid Layout -->
+            <div class="row g-4 justify-content-center mx-auto" style="max-width: 900px;">
+                <!-- Insight Card 1 -->
+                <div class="col-12 col-sm-6">
+                    <div class="p-4 p-md-5 bg-white border border-light-subtle rounded-4 text-center shadow-sm h-100 d-flex flex-column justify-content-center align-items-center"
+                        style="min-height: 160px;">
+                        <div class="fs-2 fw-bold text-dark mb-1">200+</div>
+                        <div class="fw-medium" style="color: #0d3b73; font-size: 1.1rem;">Issues Reported</div>
+                    </div>
+                </div>
+                <!-- Insight Card 2 -->
+                <div class="col-12 col-sm-6">
+                    <div class="p-4 p-md-5 bg-white border border-light-subtle rounded-4 text-center shadow-sm h-100 d-flex flex-column justify-content-center align-items-center"
+                        style="min-height: 160px;">
+                        <div class="fs-2 fw-bold text-dark mb-1">150+</div>
+                        <div class="fw-medium" style="color: #0d3b73; font-size: 1.1rem;">Issues Resolved</div>
+                    </div>
+                </div>
+                <!-- Insight Card 3 -->
+                <div class="col-12 col-sm-6">
+                    <div class="p-4 p-md-5 bg-white border border-light-subtle rounded-4 text-center shadow-sm h-100 d-flex flex-column justify-content-center align-items-center"
+                        style="min-height: 160px;">
+                        <div class="fs-2 fw-bold text-dark mb-1">50+</div>
+                        <div class="fw-medium" style="color: #0d3b73; font-size: 1.1rem;">Active Complaints</div>
+                    </div>
+                </div>
+                <!-- Insight Card 4 -->
+                <div class="col-12 col-sm-6">
+                    <div class="p-4 p-md-5 bg-white border border-light-subtle rounded-4 text-center shadow-sm h-100 d-flex flex-column justify-content-center align-items-center"
+                        style="min-height: 160px;">
+                        <div class="fs-2 fw-bold text-dark mb-1">1 Week</div>
+                        <div class="fw-medium" style="color: #0d3b73; font-size: 1.1rem;">Average Resolution Time</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Who can use-->
+    <div class="container-fluid p-5 bg-white">
+        <div class="container py-5">
+            <!-- Section Title -->
+            <h2 class="fw-bold text-dark text-uppercase tracking-wide mb-5 mt-3" style="letter-spacing: 1px;">Who Can
+                Use</h2>
+            <!-- Responsive 3-Column Grid -->
+            <div class="row g-4 justify-content-center">
+                <!-- Card 1: Citizens -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="p-4 p-xl-5 border-0 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-between shadow-sm"
+                        style="background-color: #E9F3FF; min-height: 380px;">
+                        <!-- Image Wrapper Container -->
+                        <div class="d-flex align-items-center justify-content-center flex-grow-1 mb-4"
+                            style="height: 160px;">
+                            <img src="/static/images/Group-1.png" alt="Citizens" class="img-fluid"
+                                style="max-height: 140px; object-fit: contain;">
+                        </div>
+                        <!-- Text Block Container -->
+                        <div>
+                            <h4 class="fw-bold text-dark text-uppercase fs-5 mb-2" style="letter-spacing: 0.5px;">
+                                Citizens</h4>
+                            <p class="text-secondary mb-0 fs-6 px-3">Report And Track Issues</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Authorities -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="p-4 p-xl-5 border-0 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-between shadow-sm"
+                        style="background-color: #E9F3FF; min-height: 380px;">
+                        <!-- Image Wrapper Container -->
+                        <div class="d-flex align-items-center justify-content-center flex-grow-1 mb-4"
+                            style="height: 160px;">
+                            <img src="/static/images/Group-2.png" alt="Authorities" class="img-fluid"
+                                style="max-height: 140px; object-fit: contain;">
+                        </div>
+                        <!-- Text Block Container -->
+                        <div>
+                            <h4 class="fw-bold text-dark text-uppercase fs-5 mb-2" style="letter-spacing: 0.5px;">
+                                Authorities</h4>
+                            <p class="text-secondary mb-0 fs-6 px-3">Monitor And Resolve Complaints</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Community Members -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="p-4 p-xl-5 border-0 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-between shadow-sm"
+                        style="background-color: #E9F3FF; min-height: 380px;">
+                        <!-- Image Wrapper Container -->
+                        <div class="d-flex align-items-center justify-content-center flex-grow-1 mb-4"
+                            style="height: 160px;">
+                            <img src="/static/images/Group-3.png" alt="Community Members" class="img-fluid"
+                                style="max-height: 140px; object-fit: contain;">
+                        </div>
+                        <!-- Text Block Container -->
+                        <div>
+                            <h4 class="fw-bold text-dark text-uppercase fs-5 mb-2" style="letter-spacing: 0.5px;">
+                                Community Members</h4>
+                            <p class="text-secondary mb-0 fs-6 px-3">Monitor And Resolve Complaints</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Contact us-->
+    <div class="container-fluid p-5" style="background-color: #E9F3FF;" id="Contact">
+        <div class="container py-5">
+            <!-- Section Title -->
+            <h2 class="fw-bold text-dark text-uppercase tracking-wide mb-5 mt-3" style="letter-spacing: 1px;">Contact
+            </h2>
+            <!-- Main Form-Hero Row Split -->
+            <div class="row align-items-center justify-content-center gy-5 gap-lg-5">
+                <!-- Left Column: Character Graphic Illustration -->
+                <div class="col-12 col-lg-5 text-center">
+                    <!-- Replace with your actual vector file path when ready -->
+                    <img src="/static/images/contact.png" alt="Contact vector illustration" class="img-fluid"
+                        style="max-height: 360px; object-fit: contain;">
+                </div>
+                <!-- Right Column: Interactive Form Group Container -->
+                <div class="col-12 col-lg-5">
+                    <form class="d-flex flex-column gap-3" method="POST" action="{% url 'contact_submit' %}">
+                        {% csrf_token %}
+                        <!-- Email Input Box Element -->
+                        <div>
+                            <input type="email" name="email" required
+                                class="form-control border-0 bg-white shadow-sm px-4 py-3 rounded-pill text-secondary fw-medium"
+                                placeholder="enter your mail" style="font-size: 0.95rem;">
+                        </div>
+                        <!-- Topic Input Box Element -->
+                        <div>
+                            <input type="text" name="topic" required
+                                class="form-control border-0 bg-white shadow-sm px-4 py-3 rounded-pill text-secondary fw-medium"
+                                placeholder="enter the topic to discuss" style="font-size: 0.95rem;">
+                        </div>
+                        <!-- Custom Multi-line Message Textarea Block -->
+                        <div>
+                            <textarea name="message" required
+                                class="form-control border-0 bg-white shadow-sm px-4 py-3 text-secondary fw-medium"
+                                placeholder="message" rows="5"
+                                style="border-radius: 24px; font-size: 0.95rem; resize: none;"></textarea>
+                        </div>
+                        <!-- Action Submit Button with Vibrant Blue Color Gradient -->
+                        <div class="text-center pt-2">
+                            <button type="submit"
+                                class="btn btn-primary bg-gradient border-0 rounded-5 py-2.5 px-5 fw-medium shadow-sm">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Footer-->
+    <footer class="container-fluid pt-5 bg-white border-top border-light-subtle p-0">
+        <!-- Top Link Matrix Grid Container -->
+        <div class="container pt-5 pb-4">
+            <div class="row gy-4">
+
+                <!-- Column 1: Brand Info -->
+                <div class="col-12 col-md-6 col-lg-4 text-start">
+                    <div class="mb-3">
+                        <span class="fw-bold fs-4 text-primary" style="color: #0d6efd;">CivicTrack</span>
+                        <p class="text-secondary small mt-0 mb-0" style="font-size: 0.75rem;">Your Voice, Your City,
+                            Your Change.</p>
+                    </div>
+                    <p class="text-secondary small lh-base pr-lg-4" style="text-align: justify; font-size: 0.88rem;">
+                        Our Mission Is To Provide A Simple Yet Powerful Platform That Allows Individuals To Report Civic
+                        Issues In Real Time, Connect With Local Authorities, And Track Resolutions Transparently.
+                        CivicTrack Aims To Reduce Communication Gaps, Encourage Accountability, And Ensure That Every
+                        Concern Raised Contributes To Meaningful Change.
+                    </p>
+                </div>
+
+                <!-- Column 2: Quick Access Links -->
+                <div class="col-6 col-md-3 col-lg-2">
+                    <h6 class="fw-bold text-dark mb-3">Quick Access</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 text-capitalize">
+                        <li><a href="#Home" class="text-decoration-none text-secondary link-primary small">Home</a></li>
+                        <li><a href="#About" class="text-decoration-none text-secondary link-primary small">About</a>
+                        </li>
+                        <li><a href="#HowITWorks" class="text-decoration-none text-secondary link-primary small">How It
+                                Works</a>
+                        </li>
+                        <li><a href="#WhyThisMatters" class="text-decoration-none text-secondary link-primary small">Why
+                                This
+                                Matters</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Important Links -->
+                <div class="col-6 col-md-3 col-lg-2">
+                    <h6 class="fw-bold text-dark mb-3">Important Links</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 text-capitalize">
+                        <li><a href="{% url 'civic_details' %}"
+                                class="text-decoration-none text-secondary link-primary small">Raise Issue</a>
+                        </li>
+                        <li><a href="{% url 'check_progress' %}" class="text-decoration-none text-secondary link-primary small">Check
+                                Progress</a></li>
+                        <li><a href="{% url 'login' %}"
+                                class="text-decoration-none text-secondary link-primary small">Login</a></li>
+                        <li><a href="#Contact"
+                                class="text-decoration-none text-secondary link-primary small">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Newsletter Box Group -->
+                <div class="col-12 col-md-6 col-lg-4 text-start">
+                    <h6 class="fw-bold text-dark mb-3">Signup For Emails</h6>
+                    <p class="text-secondary small mb-3" style="font-size: 0.85rem;">CivicTrack Is A Citizen-Driven
+                        Platform Designed To Transform How Communities Report, Track, And Resolve Civic Issues,
+                        Fostering Smarter And More Responsive Cities.</p>
+
+                    <!-- Capsule Form Input Group Block -->
+                    <div class="p-1 border border-secondary-subtle rounded-pill bg-light d-flex align-items-center shadow-sm"
+                        style="max-width: 320px;">
+                        <input type="email" class="form-control border-0 bg-transparent px-3 py-1 shadow-none small"
+                            placeholder="Enter Your Email" style="font-size: 0.85rem;">
+                        <button class="btn text-white rounded-pill px-4 py-1.5 fw-medium small text-capitalize"
+                            style="background-color: #032d60; font-size: 0.8rem;"><a href="{% url 'register' %}"
+                                style="text-decoration: none; color: white;">Signup</a></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Center Section: Social Bar & Copyright Rules -->
+        <div class="container text-center py-3">
+            <!-- Legal Links Row -->
+            <div class="mb-3">
+                <a href="{% url 'terms_of_service' %}" class="text-secondary text-decoration-none small me-3">Terms of Service</a>
+                <a href="{% url 'privacy_policy' %}" class="text-secondary text-decoration-none small me-3">Privacy Policy</a>
+                <a href="{% url 'imprint' %}" class="text-secondary text-decoration-none small">Imprint</a>
+            </div>
+            <!-- Colored Brand Social Icons Row -->
+            <div class="d-flex justify-content-center align-items-center gap-3 fs-5 mb-2">
+                <a href="#" style="color: #1877F2;"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#" style="color: #1DA1F2;"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" style="color: #EA4335;"><i class="fa-solid fa-envelope"></i></a>
+                <a href="#" style="color: #E1306C;"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+            <p class="text-secondary small mb-0 fw-medium">@2026 All Rights Reserved</p>
+        </div>
+
+        <!-- Ultimate Deep-Footer Massive Text Label Component Block -->
+        <div class="w-100 text-center overflow-hidden position-relative"
+            style="background: linear-gradient(180deg, #ffffff 0%, #cbdcf5 100%);">
+            <hr class="w-100 opacity-25 m-0 border-white">
+            <h1 class="fw-bold text-uppercase m-0 text-nowrap d-inline-block position-relative user-select-none"
+                style="font-size: 11vw; color: rgba(13, 110, 253, 0.12); letter-spacing: 0.3vw; line-height: 0.95; padding-top: 15px; padding-bottom: 5px;">
+                CivicTrack
+            </h1>
+        </div>
+    </footer>
+
+    <!-- FIXED BOOTSTRAP 5.3.3 COMPLETE RUNTIME JAVASCRIPT BUNDLE -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
