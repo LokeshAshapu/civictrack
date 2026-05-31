@@ -444,6 +444,40 @@ def add_comment(request, id):
             messages.error(request, "Comment content cannot be empty.")
     return redirect('issue_detail', id=id)
 
+@login_required
+def edit_comment(request, comment_id):
+    from .models import Comment
+    comment = get_object_or_404(Comment, id=comment_id)
+    if comment.user != request.user:
+        messages.error(request, "You don't have permission to edit this comment.")
+        return redirect('issue_detail', id=comment.issue.id)
+    
+    if request.method == 'POST':
+        content = request.POST.get('content', '').strip()
+        if content:
+            comment.content = content
+            comment.save()
+            messages.success(request, "Comment updated successfully.")
+        else:
+            messages.error(request, "Comment content cannot be empty.")
+    return redirect('issue_detail', id=comment.issue.id)
+
+@login_required
+def delete_comment(request, comment_id):
+    from .models import Comment
+    comment = get_object_or_404(Comment, id=comment_id)
+    if not (request.user.is_staff or request.user.is_superuser):
+        messages.error(request, "You don't have permission to delete this comment.")
+        return redirect('issue_detail', id=comment.issue.id)
+    
+    if request.method == 'POST':
+        issue_id = comment.issue.id
+        comment.delete()
+        messages.success(request, "Comment deleted successfully.")
+        return redirect('issue_detail', id=issue_id)
+    
+    return redirect('issue_detail', id=comment.issue.id)
+
 
 def terms_of_service_view(request):
     return render(request, 'terms_of_service.html')

@@ -40,6 +40,8 @@ urlpatterns = [
     path('issue/<int:id>/', views.issue_detail, name='issue_detail'),
     path('issue/<int:id>/upvote/', views.upvote_issue, name='upvote_issue'),
     path('issue/<int:id>/comment/', views.add_comment, name='add_comment'),
+    path('comment/<int:comment_id>/edit/', views.edit_comment, name='edit_comment'),
+    path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
 
     # Map routes
     path('map/', views.map_view, name='map'),

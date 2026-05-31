@@ -287,6 +287,60 @@ class CivicTrackViewsTestCase(TestCase):
         self.assertNotContains(response, "Broken street light")
         self.assertNotContains(response, "Broken Pothole")
 
+    def test_edit_comment_by_author(self):
+        comment = Comment.objects.create(
+            issue=self.issue,
+            user=self.user,
+            content="Original comment"
+        )
+        self.client.login(username='testcitizen@example.com', password='testpassword')
+        url = reverse('edit_comment', args=[comment.id])
+        
+        response = self.client.post(url, {'content': 'Updated comment content'})
+        self.assertRedirects(response, reverse('issue_detail', args=[self.issue.id]))
+        comment.refresh_from_db()
+        self.assertEqual(comment.content, 'Updated comment content')
+
+    def test_edit_comment_by_non_author(self):
+        comment = Comment.objects.create(
+            issue=self.issue,
+            user=self.user,
+            content="Original comment"
+        )
+        self.client.login(username='admin@example.com', password='adminpassword')
+        url = reverse('edit_comment', args=[comment.id])
+        
+        response = self.client.post(url, {'content': 'Hacked content'})
+        self.assertRedirects(response, reverse('issue_detail', args=[self.issue.id]))
+        comment.refresh_from_db()
+        self.assertEqual(comment.content, 'Original comment')
+
+    def test_delete_comment_by_admin(self):
+        comment = Comment.objects.create(
+            issue=self.issue,
+            user=self.user,
+            content="Irrelevant comment"
+        )
+        self.client.login(username='admin@example.com', password='adminpassword')
+        url = reverse('delete_comment', args=[comment.id])
+        
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('issue_detail', args=[self.issue.id]))
+        self.assertEqual(Comment.objects.filter(id=comment.id).count(), 0)
+
+    def test_delete_comment_by_non_admin(self):
+        comment = Comment.objects.create(
+            issue=self.issue,
+            user=self.user,
+            content="Good comment"
+        )
+        self.client.login(username='testcitizen@example.com', password='testpassword')
+        url = reverse('delete_comment', args=[comment.id])
+        
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('issue_detail', args=[self.issue.id]))
+        self.assertEqual(Comment.objects.filter(id=comment.id).count(), 1)
+
 
 class CivicTrackChatbotTestCase(TestCase):
     def setUp(self):
